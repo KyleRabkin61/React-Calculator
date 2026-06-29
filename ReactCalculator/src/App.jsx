@@ -3,11 +3,11 @@ import "./App.css";
 
 function App() {
   const [input, setInput] = useState("0");
-  
+
   const calculatorButtons = [
     {
       text: "⌫",
-      value: 0,
+      value: "delete",
       buttonClass: "inputOperation",
     },
     {
@@ -17,7 +17,7 @@ function App() {
     },
     {
       text: "%",
-      value: 0,
+      value: "percent",
       buttonClass: "inputOperation",
     },
     {
@@ -87,7 +87,7 @@ function App() {
     },
     {
       text: "+/-",
-      value: 3,
+      value: "plus/minus",
       buttonClass: "inputOperation",
     },
     {
@@ -116,12 +116,21 @@ function App() {
     } else if (buttonValue === "clear") {
       setInput("0");
       return;
+    } else if (buttonValue === "delete") {
+      deleteLastChar();
+      return;
+    } else if (buttonValue === "percent") {
+      percentage();
+      return;
+    } else if (buttonValue === "plus/minus") {
+      oppositeSign();
+      return;
     }
     if (input === "0") {
-      setInput(buttonValue);
+      setInput(buttonValue.toString());
       return;
     } else {
-      setInput(input + buttonValue);
+      setInput(input + buttonValue.toString());
       return;
     }
   }
@@ -129,6 +138,50 @@ function App() {
   function resolve() {
     const answer = eval(input);
     setInput(answer.toString());
+  }
+
+  function percentage() {
+    let newInput;
+    if (
+      input.includes("+") ||
+      input.includes("-") ||
+      input.includes("*") ||
+      input.includes("/")
+    ) {
+      newInput = eval(input);
+    } else {
+      newInput = Number(input);
+    }
+
+    setInput((newInput / 100).toString());
+  }
+
+  function deleteLastChar() {
+    if (input != "0") {
+      const newInput = input.substring(0, input.length - 1);
+
+      if (newInput === "") {
+        setInput("0");
+      } else {
+        setInput(newInput);
+      }
+    }
+  }
+
+  function oppositeSign() {
+    let newInput;
+
+    if (
+      !(
+        input.includes("+") ||
+        input.includes("-") ||
+        input.includes("*") ||
+        input.includes("/")
+      )
+    ) {
+      newInput = eval(input) * -1;
+      setInput(newInput.toString());
+    }
   }
 
   return (
